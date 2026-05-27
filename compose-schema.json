@@ -134,7 +134,12 @@
           },
           "additionalProperties": false
         },
-        "depends_on": {"$ref": "#/definitions/list_of_strings"},
+        "depends_on": {
+          "oneOf": [
+            {"$ref": "#/definitions/list_of_strings"},
+            {"$ref": "#/definitions/depends_on_object"}
+          ]
+        },
         "devices": {"type": "array", "items": {"type": "string"}, "uniqueItems": true},
         "dns": {"$ref": "#/definitions/string_or_list"},
         "dns_search": {"$ref": "#/definitions/string_or_list"},
@@ -404,7 +409,7 @@
                 "cpus": {"type": "string"},
                 "memory": {"type": "string"},
                 "generic_resources": {"$ref": "#/definitions/generic_resources"},
-                "devices": {"$ref": "#/definitions/devices"}
+                "devices": {"type": "array", "items": {"$ref": "#/definitions/devices"}}
               },
               "additionalProperties": false
             }
@@ -599,6 +604,20 @@
       "type": "array",
       "items": {"type": "string"},
       "uniqueItems": true
+    },
+
+    "depends_on_object": {
+      "type": "object",
+      "patternProperties": {
+        ".+": {
+          "type": "object",
+          "properties": {
+            "condition": {"type": "string"}
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": false
     },
 
     "list_or_dict": {
